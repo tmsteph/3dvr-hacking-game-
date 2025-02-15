@@ -59,7 +59,7 @@
         }
 
         function executeCommand(command) {
-            const args = command.split(" ");
+            const args = command.trim().toLowerCase().split(" "); // Convert command to lowercase
             const cmd = args[0];
 
             if (cmd === "help") {
