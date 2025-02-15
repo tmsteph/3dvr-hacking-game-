@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TommyOS Emulator</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: black;
+            color: limegreen;
+            text-align: left;
+            padding: 20px;
+        }
+        #terminal {
+            width: 100%;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid limegreen;
+            padding: 10px;
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+        input {
+            background: none;
+            border: none;
+            color: limegreen;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>TommyOS Emulator</h1>
+    <div id="terminal"></div>
+    <input type="text" id="commandInput" autofocus>
+
+    <script>
+        const terminal = document.getElementById("terminal");
+        const inputField = document.getElementById("commandInput");
+        let fakeFilesystem = {
+            "/": ["secret.txt", "passwords.db", "logs"],
+            "/logs": ["intrusion.log", "server.log"]
+        };
+        let crackedPasswords = false;
+
+        function print(text) {
+            terminal.innerHTML += text + "\n";
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function executeCommand(command) {
+            const args = command.split(" ");
+            const cmd = args[0];
+
+            if (cmd === "help") {
+                print("Available commands: ls, cat [file], hack, decrypt passwords.db");
+            } else if (cmd === "ls") {
+                print("Files: " + fakeFilesystem["/"].join(", "));
+            } else if (cmd === "cat") {
+                if (args[1] === "secret.txt") {
+                    print("This is a classified message. Access restricted.");
+                } else if (args[1] === "passwords.db") {
+                    print("Encrypted file. Use 'decrypt passwords.db' to unlock.");
+                } else {
+                    print("File not found.");
+                }
+            } else if (cmd === "hack") {
+                print("Attempting to breach firewall...");
+                setTimeout(() => {
+                    print("Success! Access level increased.");
+                }, 2000);
+            } else if (cmd === "decrypt") {
+                if (args[1] === "passwords.db") {
+                    crackedPasswords = true;
+                    print("Passwords decrypted! Use 'cat passwords.db' to view.");
+                } else {
+                    print("Cannot decrypt this file.");
+                }
+            } else {
+                print("Command not recognized. Type 'help' for a list of commands.");
+            }
+        }
+
+        inputField.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const command = inputField.value.trim();
+                inputField.value = "";
+                print("> " + command);
+                executeCommand(command);
+            }
+        });
+
+        print("Welcome to TommyOS v1.0\nType 'help' for a list of commands.");
+    </script>
+</body>
+</html>
